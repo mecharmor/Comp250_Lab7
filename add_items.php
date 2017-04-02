@@ -27,7 +27,11 @@
 
 <a type="button" class="btn btn-default" id="item1" >item 1</a>
 <a type="button" class="btn btn-default" id="item2">item 2</a>
+
 <?php
+//table called cart
+//columns item, title, cost
+//each row is a new item to cart
  // db connection
 $user = 'root';
 $pass = '';
@@ -37,61 +41,27 @@ $dbConnection = mysqli_connect('localhost',$user, $pass, $db) or die("Unable to 
 
 // Check for form submission:
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-		$ssn = mysqli_real_escape_string($dbConnection, trim($_POST['emp_id']));
-		$first_name = mysqli_real_escape_string($dbConnection, trim($_POST['first_name']));
-		$last_name = mysqli_real_escape_string($dbConnection, trim($_POST['last_name']));
-		$street = mysqli_real_escape_string($dbConnection, trim($_POST['street']));
-		$city = mysqli_real_escape_string($dbConnection, trim($_POST['city']));
-		$state = mysqli_real_escape_string($dbConnection, trim($_POST['state']));
-		$zip = mysqli_real_escape_string($dbConnection, trim($_POST['zip']));
-		$phone = mysqli_real_escape_string($dbConnection, trim($_POST['phone']));
-		$salary = mysqli_real_escape_string($dbConnection, trim($_POST['salary']));
-		$job = mysqli_real_escape_string($dbConnection, trim($_POST['job']));
-
-		// check for unique SSN
-		$q = "SELECT ssn FROM employees WHERE ssn = '$ssn'";
-		$r = @mysqli_query($dbConnection, $q);
-		if (mysqli_num_rows($r) == 0){
-			// make the add query
-			$q = "INSERT INTO employees
-			(ssn, first_name, last_name, street, city, state, zip, phone, salary, job)
+		$item = mysqli_real_escape_string($dbConnection, trim($_POST['item'])); //number - integer
+		$title = mysqli_real_escape_string($dbConnection, trim($_POST['title']));//string
+		$cost = mysqli_real_escape_string($dbConnection, trim($_POST['cost']));//double or float
+		
+			// Add item to database
+			$q = "INSERT INTO cart
+			(item, title, cost)
 			VALUES
-			('$ssn', '$first_name', '$last_name', '$street', '$city', '$state', '$zip', '$phone', '$salary', '$job')";
-			$r = @mysqli_query ($dbConnection, $q);
-			if ($r) {
-				echo'<p><h2>New employee added.</h2></p>';
-			} else {
-				echo'<p><h2>Employee cannot be added due to a system error.</h2></p>';
-			}
-		} else {
-			echo'<p><h2>Sorry, the employee already exists.</h2></p>';
-		}
+			('$item', '$title', '$cost')";
 	}
 
 	?>
 
 <form action="add_employee.php" id="myform" method="post">
 <fieldset><legend><b>New Employee</b></legend>
-<p>SSN: <input type="text" id="emp_id" name="emp_id" size="10" value=""/></p>
+<p>item: <input type="text" id="emp_id" name="emp_id" size="10" value=""/></p>
 <p id="empError" class="errorMsg"></p>
 <p>First Name: <input type="text" id="first_name" name="first_name" size="20" value=""/></p>
 <p id="firstNameError" class="errorMsg"></p>
 <p>Last Name: <input type="text" id="last_name" name="last_name" size="20" value=""/></p>
 <p id="lastNameError" class="errorMsg"></p>
-<p>Street: <input type="text" id="street" name="street" size="20" value=""/></p>
-<p id="streetError" class="errorMsg"></p>
-<p>City: <input type="text" id="city" name="city" size="20" value=""/></p>
-<p id="cityError" class="errorMsg"></p>
-<p>State: <input type="text" id="state" name="state" size="20" value=""/></p>
-<p id="stateError" class="errorMsg"></p>
-<p>Zip: <input type="text" id="zip" name="zip" size="20" value=""/></p>
-<p id="zipError" class="errorMsg"></p>
-<p>Phone: <input type="text" id="phone" name="phone" size="20" value=""/></p>
-<p id="phoneError" class="errorMsg"></p>
-<p>Salary: <input type="text" id="salary" name="salary" size="20" value=""/></p>
-<p id="salaryError" class="errorMsg"></p>
-<p>Job: <input type="text" id="job" name="job" size="20" value=""/></p>
-<p id="jobError" class="errorMsg"></p>
 <p><input type="submit" name="submit" value="Submit"/></p>
 <br/>
 </fieldset>
